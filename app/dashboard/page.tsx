@@ -65,12 +65,7 @@ const CATEGORY_CONFIG: Record<
   TimelineEvent["category"],
   { color: string; bg: string; border: string; dot: string; label: string }
 > = {
-  incident: {
-    color: "text-red-600 dark:text-red-400",
-    bg: "bg-red-50 dark:bg-red-950/20",
-    border: "border-red-200 dark:border-red-800/40",
-    dot: "bg-red-500",
-    label: "Incident",
+  incident: {color: "text-red-600 dark:text-red-400", bg: "bg-red-50 dark:bg-red-950/20", border: "border-red-200 dark:border-red-800/40", dot: "bg-red-500", label: "Incident",
   },
   filing: {
     color: "text-amber-600 dark:text-amber-400",
@@ -650,19 +645,8 @@ export default function DashboardPage() {
                       <div className="border-t border-slate-200 dark:border-slate-800 p-4 shrink-0">
                         <div className="flex gap-2">
                           <textarea
-                            value={chatInput}
-                            onChange={(e) => setChatInput(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder="Ask a question about this case..."
-                            rows={1}
-                            className={cn(
-                              "flex-1 resize-none rounded-xl border px-4 py-2.5 text-sm",
-                              "bg-white dark:bg-slate-900",
-                              "border-slate-200 dark:border-slate-700",
-                              "text-slate-900 dark:text-slate-100",
-                              "placeholder:text-slate-400",
-                              "focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500",
-                              "transition-all"
+                            value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={handleKeyDown} placeholder="Ask a question about this case..." rows={1}
+                            className={cn("flex-1 resize-none rounded-xl border px-4 py-2.5 text-sm", "bg-white dark:bg-slate-900", "border-slate-200 dark:border-slate-700", "text-slate-900 dark:text-slate-100", "placeholder:text-slate-400", "focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500", "transition-all"
                             )}
                           />
                           <button

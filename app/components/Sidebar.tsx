@@ -20,7 +20,6 @@ import { useEffect, useState } from "react";
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/upload", label: "Upload", icon: Upload },
-  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 export function Sidebar() {
@@ -49,7 +48,7 @@ export function Sidebar() {
           {!collapsed && (
             <Link href="/" className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
-                <Scale className="h-5 w-5 text-white" />
+                <img src="/grok1.png" className="h-7 w-7 object-contain relative"/>
               </div>
               <span className="font-semibold text-slate-900 dark:text-slate-100">
                 Legalyze

@@ -48,7 +48,7 @@ export default function LandingPage() {
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
-                <Scale className="h-4 w-4 text-white" />
+                <img src="/grok1.png" className="h-7 w-7 object-contain relative"/>
               </div>
               <span className="font-semibold text-slate-900 dark:text-slate-100">
                 Legalyze
@@ -164,7 +164,7 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-blue-600 to-indigo-600">
-                <Scale className="h-3 w-3 text-white" />
+                <img src="/grok1.png" className="h-7 w-7 object-contain relative"/>
               </div>
               <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
                 Legalyze
