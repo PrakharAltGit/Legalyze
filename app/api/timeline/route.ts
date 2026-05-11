@@ -4,8 +4,8 @@ import http from 'http';
 export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
-const OLLAMA_HOST = process.env.OLLAMA_HOST || 'localhost';
-const OLLAMA_PORT = parseInt(process.env.OLLAMA_PORT || '11434');
+const OLLAMA_URL = (process.env.OLLAMA_URL || 'https://chastity-operative-purifier.ngrok-free.dev').replace(/\/$/, '');
+
 const MODEL_NAME = process.env.OLLAMA_MODEL || 'llama3.1:8b';
 
 function ollamaRequest(body: string): Promise<string> {
