@@ -1,58 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import http from 'http';
 
 export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
 const OLLAMA_URL = (process.env.OLLAMA_URL || 'https://chastity-operative-purifier.ngrok-free.dev').replace(/\/$/, '');
-
 const MODEL_NAME = process.env.OLLAMA_MODEL || 'llama3.1:8b';
 
-function ollamaRequest(body: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const postData = Buffer.from(body, 'utf8');
-
-    const options = {
-      hostname: OLLAMA_HOST,
-      port: OLLAMA_PORT,
-      path: '/api/generate',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': postData.length,
-      },
-      timeout: 300000,
-    };
-
-    const req = http.request(options, (res) => {
-      let data = '';
-      res.setEncoding('utf8');
-      res.on('data', (chunk) => { data += chunk; });
-      res.on('end', () => {
-        if (res.statusCode && res.statusCode >= 400) {
-          reject(new Error(`Ollama returned status ${res.statusCode}: ${data}`));
-        } else {
-          resolve(data);
-        }
-      });
-    });
-
-    req.on('timeout', () => {
-      req.destroy();
-      reject(new Error('TIMEOUT'));
-    });
-
-    req.on('error', (err: NodeJS.ErrnoException) => {
-      if (err.code === 'ECONNREFUSED') {
-        reject(new Error('ECONNREFUSED'));
-      } else {
-        reject(err);
-      }
-    });
-
-    req.write(postData);
-    req.end();
+async function ollamaRequest(body: string): Promise<string> {
+  const response = await fetch(`${OLLAMA_URL}/api/generate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: body,
   });
+
+  if (!response.ok) {
+    throw new Error(`Ollama error: ${response.status}`);
+  }
+
+  return response.text();
 }
 
 export async function POST(request: NextRequest) {

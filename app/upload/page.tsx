@@ -173,7 +173,7 @@ export default function UploadPage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       <Sidebar />
-      <main className="min-h-screen transition-all duration-300 ease-in-out" style={{ marginLeft: "var(--sidebar-width)" }}>
+      <main className="lg:ml-64 min-h-screen">
         <div className="p-6 lg:p-8 max-w-4xl mx-auto">
           <div className="mb-8">
             <Link href="/dashboard">

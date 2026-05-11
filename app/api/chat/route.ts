@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
+const OLLAMA_URL = (process.env.OLLAMA_URL || 'https://chastity-operative-purifier.ngrok-free.dev').replace(/\/$/, '');
 const MODEL_NAME = process.env.OLLAMA_MODEL || 'llama3.1:8b';
 
 interface Message {

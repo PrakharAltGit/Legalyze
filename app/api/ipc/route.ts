@@ -1,40 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
-import http from 'http';
 
 export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
-const OLLAMA_HOST = process.env.OLLAMA_HOST || 'localhost';
-const OLLAMA_PORT = parseInt(process.env.OLLAMA_PORT || '11434');
+const OLLAMA_URL = (process.env.OLLAMA_URL || 'https://chastity-operative-purifier.ngrok-free.dev')
+                    .replace(/\/$/, '');
+
 const MODEL_NAME = process.env.OLLAMA_MODEL || 'llama3.1:8b';
 
-function ollamaRequest(body: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const postData = Buffer.from(body, 'utf8');
-    const options = {
-      hostname: OLLAMA_HOST,
-      port: OLLAMA_PORT,
-      path: '/api/generate',
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Content-Length': postData.length },
-      timeout: 300000,
-    };
-    const req = http.request(options, (res) => {
-      let data = '';
-      res.setEncoding('utf8');
-      res.on('data', (chunk) => { data += chunk; });
-      res.on('end', () => {
-        if (res.statusCode && res.statusCode >= 400) reject(new Error(`Ollama status ${res.statusCode}: ${data}`));
-        else resolve(data);
-      });
-    });
-    req.on('timeout', () => { req.destroy(); reject(new Error('TIMEOUT')); });
-    req.on('error', (err: NodeJS.ErrnoException) => {
-      reject(new Error(err.code === 'ECONNREFUSED' ? 'ECONNREFUSED' : err.message));
-    });
-    req.write(postData);
-    req.end();
+async function ollamaRequest(body: string): Promise<string> {
+  const response = await fetch(`${OLLAMA_URL}/api/generate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: body,
   });
+
+  if (!response.ok) {
+    throw new Error(`Ollama error: ${response.status}`);
+  }
+
+  return response.text();
 }
 
 export async function POST(request: NextRequest) {
@@ -59,19 +44,7 @@ For each section found, extract:
 5. "reason" — why this section was applied in this specific case (1-2 sentences based on the facts)
 6. "outcome" — what happened with this charge: "convicted", "acquitted", "charges framed", "under trial", or "not specified"
 
-Respond ONLY with a valid JSON array. No explanation, no markdown, no backticks. Raw JSON only:
-[
-  {
-    "section": "Section 302 IPC",
-    "actName": "Indian Penal Code",
-    "shortDescription": "Punishment for murder",
-    "appliedTo": "Accused Ramesh Kumar",
-    "reason": "The accused was charged with murder of the victim by stabbing on 15 March 1993.",
-    "outcome": "convicted"
-  }
-]
-
-Extract ALL sections mentioned. If no sections are found, return an empty array [].
+Respond ONLY with a valid JSON array. No explanation, no markdown, no backticks. Raw JSON only.
 
 Document:
 ${truncatedText}`;
@@ -87,13 +60,10 @@ ${truncatedText}`;
     try {
       rawResponse = await ollamaRequest(requestBody);
     } catch (err: any) {
-      if (err.message === 'ECONNREFUSED') {
-        return NextResponse.json({ error: 'Cannot connect to Ollama. Make sure it is running.' }, { status: 503 });
-      }
-      if (err.message === 'TIMEOUT') {
-        return NextResponse.json({ error: 'Ollama timed out. Try again.' }, { status: 504 });
-      }
-      throw err;
+      return NextResponse.json(
+        { error: 'Cannot connect to Ollama. Make sure Ollama + ngrok is running.' }, 
+        { status: 503 }
+      );
     }
 
     const data = JSON.parse(rawResponse);
